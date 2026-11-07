@@ -17,37 +17,43 @@ const jetbrainsMono = JetBrains_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Shubham Bhoyar - Software Engineer",
-  description: "Software Engineer specializing in full-stack development, creating accessible and performant web applications.",
-  keywords: ["Software Engineer", "Full Stack Developer", "React", "Node.js", "TypeScript", "Web Development"],
+  title: "Shubham Bhoyar - Full Stack Developer (Node.js, React.js)",
+  description:
+    "Full Stack Developer with nearly 3 years of experience building and deploying scalable web applications with Node.js, React.js and microservices. Specialised in WhatsApp Business API, WhatsApp Flows and customer-engagement platforms.",
+  keywords: [
+    "Shubham Bhoyar",
+    "Full Stack Developer",
+    "Node.js",
+    "React.js",
+    "WhatsApp Business API",
+    "WhatsApp Flows",
+    "Microservices",
+    "PostgreSQL",
+    "MongoDB",
+    "RabbitMQ",
+    "Redis",
+  ],
   authors: [{ name: "Shubham Bhoyar" }],
   creator: "Shubham Bhoyar",
   openGraph: {
     type: "website",
     locale: "en_US",
-    url: "https://shubhambhoyar.dev",
-    title: "Shubham Bhoyar - Software Engineer",
-    description: "Software Engineer specializing in full-stack development, creating accessible and performant web applications.",
+    url: "https://shubhambhoyar.vercel.app",
+    title: "Shubham Bhoyar - Full Stack Developer",
+    description:
+      "Full Stack Developer with nearly 3 years of experience building scalable applications with Node.js, React.js, and microservices.",
     siteName: "Shubham Bhoyar Portfolio",
   },
   twitter: {
     card: "summary_large_image",
-    title: "Shubham Bhoyar - Software Engineer",
-    description: "Software Engineer specializing in full-stack development, creating accessible and performant web applications.",
-    creator: "@shubhambhoyar",
+    title: "Shubham Bhoyar - Full Stack Developer",
+    description:
+      "Full Stack Developer with nearly 3 years of experience building scalable applications with Node.js, React.js, and microservices.",
   },
   robots: {
     index: true,
     follow: true,
-    googleBot: {
-      index: true,
-      follow: true,
-      "max-video-preview": -1,
-      "max-image-preview": "large",
-      "max-snippet": -1,
-    },
   },
-  generator: "v0.app",
 };
 
 export default function RootLayout({

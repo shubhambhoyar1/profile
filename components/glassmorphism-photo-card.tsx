@@ -38,17 +38,17 @@ export function GlassmorphismPhotoCard() {
       });
     }
 
+    let animationFrameId: number;
+
     function animate() {
       if (!ctx || !canvas) return;
 
       ctx.clearRect(0, 0, canvas.width, canvas.height);
 
       bubbles.forEach((bubble) => {
-        // Update position
         bubble.x += bubble.dx;
         bubble.y += bubble.dy;
 
-        // Bounce off edges
         if (bubble.x <= bubble.radius || bubble.x >= canvas.width - bubble.radius) {
           bubble.dx *= -1;
         }
@@ -56,7 +56,6 @@ export function GlassmorphismPhotoCard() {
           bubble.dy *= -1;
         }
 
-        // Draw bubble
         const gradient = ctx.createRadialGradient(bubble.x, bubble.y, 0, bubble.x, bubble.y, bubble.radius);
 
         if (theme === "dark") {
@@ -73,27 +72,51 @@ export function GlassmorphismPhotoCard() {
         ctx.fill();
       });
 
-      requestAnimationFrame(animate);
+      animationFrameId = requestAnimationFrame(animate);
     }
 
     animate();
+
+    return () => {
+      cancelAnimationFrame(animationFrameId);
+    };
   }, [theme]);
 
   return (
-    <div className="relative w-72 h-96 rounded-2xl overflow-hidden group">
+    <div className="relative w-72 h-96 rounded-2xl overflow-hidden group shadow-2xl transition-all duration-300 hover:shadow-primary/20">
       {/* Glassmorphism background */}
       <div className="absolute inset-0 bg-gradient-to-br from-white/10 to-white/5 dark:from-white/5 dark:to-white/2 backdrop-blur-xl border border-white/20 dark:border-white/10 rounded-2xl shadow-2xl"></div>
 
       {/* Animated bubbles canvas */}
-      <canvas ref={canvasRef} className="absolute inset-0 w-full h-full rounded-2xl" style={{ mixBlendMode: theme === "dark" ? "screen" : "multiply" }} />
+      <canvas
+        ref={canvasRef}
+        className="absolute inset-0 w-full h-full rounded-2xl"
+        style={{ mixBlendMode: theme === "dark" ? "screen" : "multiply" }}
+      />
 
       {/* Photo */}
-      <div className="absolute inset-4 rounded-xl overflow-hidden bg-gradient-to-br from-gray-100 to-gray-200 dark:from-gray-800 dark:to-gray-900">
-        <img src="/profile.jpg" alt="Shubham Bhoyar" className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" />
+      <div className="absolute inset-4 rounded-xl overflow-hidden bg-gradient-to-br from-gray-100 to-gray-200 dark:from-gray-800 dark:to-gray-900 border border-white/10">
+        <img
+          src="/Profile.png"
+          alt="Shubham Bhoyar - Full Stack Developer"
+          onError={(e) => {
+            const target = e.currentTarget;
+            if (target.src.includes("Profile.png")) {
+              target.src = "/profile.jpg";
+            }
+          }}
+          className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+        />
+      </div>
+
+      {/* Subtle bottom badge overlay */}
+      <div className="absolute bottom-6 left-6 right-6 p-2.5 rounded-lg bg-background/70 backdrop-blur-md border border-white/10 text-center shadow-lg transition-transform duration-300 group-hover:-translate-y-1">
+        <p className="text-xs font-semibold text-foreground tracking-wide">Shubham Bhoyar</p>
+        <p className="text-[11px] text-muted-foreground">Full Stack Developer</p>
       </div>
 
       {/* Overlay gradient */}
-      <div className="absolute inset-0 bg-gradient-to-t from-black/20 via-transparent to-transparent rounded-2xl"></div>
+      <div className="absolute inset-0 bg-gradient-to-t from-black/25 via-transparent to-transparent rounded-2xl pointer-events-none"></div>
 
       {/* Floating particles */}
       <div className="absolute inset-0 pointer-events-none">

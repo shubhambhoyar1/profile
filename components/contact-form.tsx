@@ -1,137 +1,175 @@
-"use client"
+"use client";
 
-import type React from "react"
-
-import { useState } from "react"
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import { Textarea } from "@/components/ui/textarea"
-import { Label } from "@/components/ui/label"
-import { Card, CardContent } from "@/components/ui/card"
-import { Mail, Send, CheckCircle } from "lucide-react"
+import type React from "react";
+import { useState } from "react";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
+import { Label } from "@/components/ui/label";
+import { Card, CardContent } from "@/components/ui/card";
+import { Mail, Send, CheckCircle2, MessageCircle, Linkedin } from "lucide-react";
+import { LINKS } from "@/constants/links";
 
 export function ContactForm() {
-  const [isSubmitting, setIsSubmitting] = useState(false)
-  const [isSubmitted, setIsSubmitted] = useState(false)
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isSubmitted, setIsSubmitted] = useState(false);
   const [formData, setFormData] = useState({
     name: "",
     email: "",
     subject: "",
     message: "",
-  })
+  });
 
   const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault()
-    setIsSubmitting(true)
+    e.preventDefault();
+    setIsSubmitting(true);
 
-    // Simulate form submission
-    await new Promise((resolve) => setTimeout(resolve, 2000))
+    // Prepare mailto link with encoded content
+    const mailtoSubject = encodeURIComponent(formData.subject || `Inquiry from ${formData.name}`);
+    const mailtoBody = encodeURIComponent(
+      `Name: ${formData.name}\nEmail: ${formData.email}\n\nMessage:\n${formData.message}`
+    );
+    const mailtoUrl = `mailto:${LINKS.EMAIL}?subject=${mailtoSubject}&body=${mailtoBody}`;
 
-    setIsSubmitting(false)
-    setIsSubmitted(true)
+    // Attempt to trigger mailto
+    window.location.href = mailtoUrl;
 
-    // Reset form after 3 seconds
-    setTimeout(() => {
-      setIsSubmitted(false)
-      setFormData({ name: "", email: "", subject: "", message: "" })
-    }, 3000)
-  }
+    await new Promise((resolve) => setTimeout(resolve, 1000));
+    setIsSubmitting(false);
+    setIsSubmitted(true);
+  };
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     setFormData((prev) => ({
       ...prev,
       [e.target.name]: e.target.value,
-    }))
-  }
+    }));
+  };
 
   if (isSubmitted) {
     return (
-      <Card className="border-green-200 bg-green-50 dark:border-green-800 dark:bg-green-950">
-        <CardContent className="p-8 text-center">
-          <CheckCircle className="h-12 w-12 text-green-600 mx-auto mb-4" />
-          <h3 className="text-lg font-medium text-green-800 dark:text-green-200 mb-2">Message Sent Successfully!</h3>
-          <p className="text-green-600 dark:text-green-300">Thank you for reaching out. I'll get back to you soon.</p>
+      <Card className="border-emerald-500/30 bg-emerald-500/5 backdrop-blur-sm shadow-lg">
+        <CardContent className="p-8 text-center space-y-4">
+          <CheckCircle2 className="h-12 w-12 text-emerald-500 mx-auto" />
+          <h3 className="text-xl font-bold text-foreground">Message Ready to Send!</h3>
+          <p className="text-sm text-muted-foreground max-w-md mx-auto leading-relaxed">
+            Your default email client has been opened with the message pre-filled. If it didn't open automatically,
+            you can reach Shubham directly via:
+          </p>
+          <div className="flex flex-wrap justify-center gap-3 pt-2">
+            <Button asChild size="sm" className="bg-[#0A66C2] hover:bg-[#004182] text-white">
+              <a href={LINKS.LINKEDIN} target="_blank" rel="noopener noreferrer">
+                <Linkedin className="h-4 w-4 mr-1.5 fill-current" />
+                Message on LinkedIn
+              </a>
+            </Button>
+            <Button asChild size="sm" variant="outline" className="border-emerald-500/40 text-emerald-500 hover:bg-emerald-500/10">
+              <a href={LINKS.WHATSAPP} target="_blank" rel="noopener noreferrer">
+                <MessageCircle className="h-4 w-4 mr-1.5" />
+                Chat on WhatsApp
+              </a>
+            </Button>
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={() => {
+                setIsSubmitted(false);
+                setFormData({ name: "", email: "", subject: "", message: "" });
+              }}
+              className="text-xs text-muted-foreground"
+            >
+              Reset Form
+            </Button>
+          </div>
         </CardContent>
       </Card>
-    )
+    );
   }
 
   return (
-    <Card>
-      <CardContent className="p-8">
+    <Card className="border-border/60 bg-card/60 backdrop-blur-sm shadow-md">
+      <CardContent className="p-6 sm:p-8">
         <div className="mb-6">
-          <Mail className="h-8 w-8 text-primary mb-3" />
-          <h3 className="text-xl font-medium mb-2">Send me a message</h3>
-          <p className="text-muted-foreground">Have a project in mind? Let's discuss how we can work together.</p>
+          <div className="inline-flex p-2.5 rounded-xl bg-primary/10 text-primary mb-3">
+            <Mail className="h-6 w-6" />
+          </div>
+          <h3 className="text-xl font-bold mb-1">Send Me a Message</h3>
+          <p className="text-xs sm:text-sm text-muted-foreground">
+            Have a project in mind or an engineering opportunity? Reach out directly.
+          </p>
         </div>
 
-        <form onSubmit={handleSubmit} className="space-y-6">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div className="space-y-2">
-              <Label htmlFor="name">Name</Label>
+        <form onSubmit={handleSubmit} className="space-y-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div className="space-y-1.5">
+              <Label htmlFor="name" className="text-xs font-semibold">Your Name</Label>
               <Input
                 id="name"
                 name="name"
                 value={formData.name}
                 onChange={handleChange}
-                placeholder="Your name"
+                placeholder="e.g. John Doe"
+                className="bg-background/50 border-border/60 text-sm"
                 required
               />
             </div>
-            <div className="space-y-2">
-              <Label htmlFor="email">Email</Label>
+            <div className="space-y-1.5">
+              <Label htmlFor="email" className="text-xs font-semibold">Email Address</Label>
               <Input
                 id="email"
                 name="email"
                 type="email"
                 value={formData.email}
                 onChange={handleChange}
-                placeholder="your.email@example.com"
+                placeholder="e.g. john@example.com"
+                className="bg-background/50 border-border/60 text-sm"
                 required
               />
             </div>
           </div>
 
-          <div className="space-y-2">
-            <Label htmlFor="subject">Subject</Label>
+          <div className="space-y-1.5">
+            <Label htmlFor="subject" className="text-xs font-semibold">Subject</Label>
             <Input
               id="subject"
               name="subject"
               value={formData.subject}
               onChange={handleChange}
-              placeholder="What's this about?"
+              placeholder="e.g. Full-Stack Engineer Role / Project Consultation"
+              className="bg-background/50 border-border/60 text-sm"
               required
             />
           </div>
 
-          <div className="space-y-2">
-            <Label htmlFor="message">Message</Label>
+          <div className="space-y-1.5">
+            <Label htmlFor="message" className="text-xs font-semibold">Message</Label>
             <Textarea
               id="message"
               name="message"
               value={formData.message}
               onChange={handleChange}
-              placeholder="Tell me about your project..."
-              rows={5}
+              placeholder="Tell me about your requirements, timeline, or open role..."
+              rows={4}
+              className="bg-background/50 border-border/60 text-sm"
               required
             />
           </div>
 
-          <Button type="submit" className="w-full" disabled={isSubmitting}>
+          <Button type="submit" className="w-full shadow-md" disabled={isSubmitting}>
             {isSubmitting ? (
-              <>
-                <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2" />
-                Sending...
-              </>
+              <span className="flex items-center gap-2">
+                <span className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+                Opening Mailer...
+              </span>
             ) : (
-              <>
-                <Send className="h-4 w-4 mr-2" />
-                Send Message
-              </>
+              <span className="flex items-center justify-center gap-2">
+                <Send className="h-4 w-4" />
+                Send via Email Client
+              </span>
             )}
           </Button>
         </form>
       </CardContent>
     </Card>
-  )
+  );
 }
