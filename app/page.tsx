@@ -7,6 +7,8 @@ import { Badge } from "@/components/ui/badge";
 import { GlassmorphismPhotoCard } from "@/components/glassmorphism-photo-card";
 import { InteractiveName } from "@/components/interactive-name";
 import { FloatingBubbles } from "@/components/floating-bubbles";
+import { EffectsControls } from "@/components/effects-controls";
+import { RightSideNav } from "@/components/right-side-nav";
 import { InteractiveLinkedInCard } from "@/components/interactive-linkedin-card";
 import {
   Github,
@@ -35,8 +37,20 @@ import {
   ShieldCheck,
   Check,
   Copy,
+  Package,
+  Smartphone,
+  ChevronDown,
+  ArrowUp,
+  Filter,
 } from "lucide-react";
 import { useTheme } from "next-themes";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
 import { ContactForm } from "@/components/contact-form";
 import { AnimatedCounter } from "@/components/animated-counter";
 import { ScrollProgress } from "@/components/scroll-progress";
@@ -46,14 +60,56 @@ import { ParallaxBackground } from "@/components/parallax-background";
 import { LINKS } from "@/constants/links";
 
 export default function Portfolio() {
-  const [activeTab, setActiveTab] = useState("about");
+  const [activeSection, setActiveSection] = useState("about");
+  const [projectCategory, setProjectCategory] = useState("all");
+  const [showBackToTop, setShowBackToTop] = useState(false);
   const [mounted, setMounted] = useState(false);
   const [copiedUrl, setCopiedUrl] = useState(false);
+  const [selectedProject, setSelectedProject] = useState<any | null>(null);
   const { theme, setTheme } = useTheme();
 
   useEffect(() => {
     setMounted(true);
+
+    const sectionIds = ["about", "experience", "projects", "skills", "education", "contact"];
+
+    const handleScroll = () => {
+      setShowBackToTop(window.scrollY > 400);
+
+      const scrollCheckPoint = 200;
+      let currentActive = "about";
+
+      for (const id of sectionIds) {
+        const section = document.getElementById(id);
+        if (section) {
+          const rect = section.getBoundingClientRect();
+          if (rect.top <= scrollCheckPoint) {
+            currentActive = id;
+          }
+        }
+      }
+
+      if (window.innerHeight + window.scrollY >= document.documentElement.scrollHeight - 70) {
+        currentActive = "contact";
+      }
+
+      setActiveSection(currentActive);
+    };
+
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    handleScroll();
+    return () => window.removeEventListener("scroll", handleScroll);
   }, []);
+
+  const scrollToSection = (id: string) => {
+    setActiveSection(id);
+    const element = document.getElementById(id);
+    if (element) {
+      const yOffset = -50;
+      const y = element.getBoundingClientRect().top + window.pageYOffset + yOffset;
+      window.scrollTo({ top: y, behavior: "smooth" });
+    }
+  };
 
   const copyLinkedIn = async () => {
     try {
@@ -66,16 +122,29 @@ export default function Portfolio() {
     }
   };
 
-  const tabs = [
-    { id: "about", label: "About", icon: User },
-    { id: "experience", label: "Experience", icon: Briefcase },
-    { id: "projects", label: "Projects", icon: Code },
-    { id: "skills", label: "Skills", icon: Cpu },
-    { id: "education", label: "Education", icon: GraduationCap },
-    { id: "contact", label: "Contact", icon: MessageCircle },
-  ];
-
   const projects = [
+    {
+      title: "Inventory & Order Management System",
+      category: "E-Commerce Logistics & Fulfillment",
+      tagline: "Customized e-commerce inventory and order fulfillment platform integrated with Shopify and Shiprocket.",
+      description:
+        "A customized inventory management platform that connects Shopify and Shiprocket to automate order processing, warehouse management, employee assignments, invoice generation, and shipping operations.",
+      overview:
+        "A customized inventory management platform that connects Shopify and Shiprocket to automate order processing, warehouse management, employee assignments, invoice generation, and shipping operations.",
+      highlights: [
+        "Shopify Webhook Integration: Automated real-time order intake, inventory syncing, and order status updates",
+        "Warehouse and Rack Management: Bin-level mapping, stock movement tracking, and physical inventory allocation",
+        "Employee-wise Order Assignment: Role-based task delegation for streamlined picking, packing, and quality verification",
+        "Mobile Order Processing: Floor mobile app integration built with Flutter (basic knowledge) for on-the-go scanning and dispatch",
+        "Automated Invoice Generation: Instant tax & GST compliant invoice creation, printable packing slips, and batch PDF generation",
+        "Shipping Management: Direct Shiprocket API integration for real-time courier rate comparison, AWB label generation, and live dispatch tracking",
+      ],
+      image: "/modern-ecommerce-interface.png",
+      tech: ["React.js", "Node.js", "MongoDB", "Shopify API", "Shiprocket API", "Flutter (Basic)", "Webhooks", "REST APIs"],
+      github: null,
+      isPublicGithub: false,
+      live: LINKS.PORTFOLIO,
+    },
     {
       title: "WhatsApp Flow Automation Platform",
       category: "Full Stack & Enterprise Messaging",
@@ -90,6 +159,7 @@ export default function Portfolio() {
       image: "/shubham-banner.png",
       tech: ["Node.js", "React.js", "WhatsApp Business API", "Flow JSON", "Adapters", "TypeScript", "Tailwind CSS"],
       github: LINKS.GITHUB,
+      isPublicGithub: true,
       live: LINKS.PORTFOLIO,
     },
     {
@@ -106,6 +176,7 @@ export default function Portfolio() {
       image: "/task-management-dashboard.png",
       tech: ["Node.js", "React.js", "MongoDB", "REST APIs", "Data Analytics", "Chart.js"],
       github: LINKS.GITHUB,
+      isPublicGithub: true,
       live: LINKS.PORTFOLIO,
     },
     {
@@ -122,9 +193,32 @@ export default function Portfolio() {
       image: "/mern-banner.png",
       tech: ["Node.js", "MongoDB", "AWS S3", "Data Center Migration", "Batch Processing", "Audit Logging"],
       github: LINKS.GITHUB,
+      isPublicGithub: true,
       live: LINKS.GITHUB,
     },
   ];
+
+  const projectFilters = [
+    { id: "all", label: "All Projects", count: projects.length },
+    { id: "ecommerce", label: "E-Commerce & Logistics", count: 1 },
+    { id: "messaging", label: "Enterprise Messaging", count: 1 },
+    { id: "data", label: "Data & Infrastructure", count: 2 },
+  ];
+
+  const filteredProjects = projects.filter((p) => {
+    if (projectCategory === "all") return true;
+    if (projectCategory === "ecommerce")
+      return p.category.toLowerCase().includes("commerce") || p.title.toLowerCase().includes("inventory");
+    if (projectCategory === "messaging")
+      return p.category.toLowerCase().includes("messaging") || p.title.toLowerCase().includes("flow");
+    if (projectCategory === "data")
+      return (
+        p.category.toLowerCase().includes("data") ||
+        p.title.toLowerCase().includes("migration") ||
+        p.title.toLowerCase().includes("analytics")
+      );
+    return true;
+  });
 
   const experience = [
     {
@@ -143,6 +237,7 @@ export default function Portfolio() {
         "Improved the database pipeline to retrieve large volumes of data efficiently with low latency.",
         "Optimized database queries, schemas, and indexing strategies to achieve peak performance.",
         "Added system observability and monitoring with Loki and Grafana for centralized logs and metrics.",
+        "Engineered customized e-commerce inventory and order fulfillment platform integrated with Shopify webhooks and Shiprocket logistics APIs.",
         "Designed database schemas, automated audit logging, and engineered secure third-party integrations.",
       ],
       skills: [
@@ -152,7 +247,10 @@ export default function Portfolio() {
         "MongoDB",
         "RabbitMQ",
         "Redis",
+        "Shopify API",
+        "Shiprocket API",
         "WhatsApp Business API",
+        "Flutter (Basic)",
         "Loki",
         "Grafana",
         "Microservices",
@@ -180,12 +278,43 @@ export default function Portfolio() {
     {
       category: "Backend & APIs",
       icon: Terminal,
-      skills: ["Node.js", "Express.js", "REST APIs", "Microservices", "WhatsApp Business API", "API Architecture"],
+      skills: [
+        "Node.js",
+        "Express.js",
+        "REST APIs",
+        "Microservices",
+        "Shopify API",
+        "Shiprocket API",
+        "WhatsApp Business API",
+        "Webhooks",
+        "API Architecture",
+      ],
     },
     {
-      category: "Frontend Development",
+      category: "Frontend & Mobile",
       icon: Code,
-      skills: ["React.js", "JavaScript (ES6+)", "TypeScript", "HTML5", "CSS3", "Tailwind CSS", "Responsive UI"],
+      skills: [
+        "React.js",
+        "Flutter (Basic)",
+        "JavaScript (ES6+)",
+        "TypeScript",
+        "HTML5",
+        "CSS3",
+        "Tailwind CSS",
+        "Responsive UI",
+      ],
+    },
+    {
+      category: "E-Commerce & Logistics",
+      icon: Package,
+      skills: [
+        "Shopify Webhook Sync",
+        "Shiprocket Logistics API",
+        "Warehouse & Rack Management",
+        "Employee Order Assignment",
+        "Automated Invoice Generation",
+        "AWB & Shipping Tracking",
+      ],
     },
     {
       category: "Databases & Optimization",
@@ -261,6 +390,11 @@ export default function Portfolio() {
       <div className="container mx-auto px-4 py-8 max-w-6xl relative z-20">
         {/* Header / Hero */}
         <header className="mb-14 animate-in fade-in duration-1000">
+          {/* Mobile Quick Controls Bar */}
+          <div className="flex lg:hidden justify-end mb-4">
+            <EffectsControls showThemeToggle={true} size="sm" />
+          </div>
+
           <div className="flex justify-between items-start mb-8 gap-8">
             <div className="flex-1 max-w-4xl space-y-4">
               {/* Badges / Chips */}
@@ -276,6 +410,10 @@ export default function Portfolio() {
                 <div className="hidden sm:flex items-center gap-1.5 px-3 py-1 rounded-full bg-muted/60 border border-border/50">
                   <Coffee className="h-3.5 w-3.5 text-amber-500" />
                   <span>WhatsApp Flows & Microservices</span>
+                </div>
+                <div className="hidden md:flex items-center gap-1.5 px-3 py-1 rounded-full bg-muted/60 border border-border/50">
+                  <Package className="h-3.5 w-3.5 text-sky-500" />
+                  <span>Shopify & Shiprocket Logistics</span>
                 </div>
               </div>
 
@@ -294,9 +432,9 @@ export default function Portfolio() {
               <p className="text-base sm:text-lg text-muted-foreground max-w-2xl leading-relaxed">
                 Full Stack Developer with nearly 3 years of experience building and deploying scalable web
                 applications with Node.js, React.js, and microservices. Specialised in{" "}
-                <strong className="text-foreground font-semibold">WhatsApp Business API</strong>,{" "}
-                <strong className="text-foreground font-semibold">WhatsApp Flows</strong>, and customer-engagement
-                platforms (WhatsApp, SMS, RCS). Comfortable owning features end-to-end: API design, database schemas,
+                <strong className="text-foreground font-semibold">WhatsApp Business API & Flows</strong>,{" "}
+                <strong className="text-foreground font-semibold">E-Commerce Logistics (Shopify & Shiprocket)</strong>, and customer-engagement
+                platforms. Comfortable owning features end-to-end: API design, database schemas,
                 authentication, integrations, and deployment.
               </p>
 
@@ -306,7 +444,7 @@ export default function Portfolio() {
                   asChild
                   className="hover:scale-105 transition-transform duration-200 shadow-md hover:shadow-primary/20"
                 >
-                  <a href="#contact" onClick={() => setActiveTab("contact")}>
+                  <a href="#contact" onClick={() => scrollToSection("contact")}>
                     <MessageCircle className="h-4 w-4 mr-2" />
                     Get In Touch
                   </a>
@@ -337,18 +475,9 @@ export default function Portfolio() {
               </div>
             </div>
 
-            {/* Right side Photo Card & Theme Toggle */}
+            {/* Right side Photo Card & Visual Effects / Theme Controls */}
             <div className="hidden lg:flex flex-col items-end gap-4 shrink-0">
-              <Button
-                variant="outline"
-                size="icon"
-                onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
-                className="shrink-0 hover:scale-110 transition-transform duration-200 bg-card/60 backdrop-blur-md"
-              >
-                <Sun className="h-[1.2rem] w-[1.2rem] rotate-0 scale-100 transition-all dark:-rotate-90 dark:scale-0 text-amber-500" />
-                <Moon className="absolute h-[1.2rem] w-[1.2rem] rotate-90 scale-0 transition-all dark:rotate-0 dark:scale-100 text-sky-400" />
-                <span className="sr-only">Toggle theme</span>
-              </Button>
+              <EffectsControls showThemeToggle={true} />
 
               <div className="animate-in slide-in-from-right-12 duration-1000 delay-300">
                 <GlassmorphismPhotoCard />
@@ -374,42 +503,26 @@ export default function Portfolio() {
             <Button
               variant="ghost"
               size="sm"
-              onClick={() => setActiveTab("experience")}
+              onClick={() => scrollToSection("experience")}
               className="text-primary hover:text-primary/80 shrink-0 text-xs sm:text-sm font-medium"
             >
               View Experience <ArrowRight className="h-3.5 w-3.5 ml-1" />
             </Button>
           </div>
-
-          {/* Navigation Tabs */}
-          <nav className="border-b border-border mt-10">
-            <div className="flex flex-wrap gap-2 sm:gap-6 pb-2">
-              {tabs.map((tab) => {
-                const Icon = tab.icon;
-                return (
-                  <button
-                    key={tab.id}
-                    onClick={() => setActiveTab(tab.id)}
-                    className={`flex items-center gap-2 py-3 px-3 text-xs sm:text-sm font-medium tracking-wide uppercase transition-all duration-300 rounded-t-lg ${
-                      activeTab === tab.id
-                        ? "text-primary border-b-2 border-primary bg-primary/5 font-semibold"
-                        : "text-muted-foreground hover:text-foreground hover:bg-muted/30"
-                    }`}
-                  >
-                    <Icon className="h-4 w-4" />
-                    <span>{tab.label}</span>
-                  </button>
-                );
-              })}
-            </div>
-          </nav>
         </header>
 
-        {/* Content Tabs */}
-        <main className="relative z-10">
-          {/* TAB 1: ABOUT */}
-          {activeTab === "about" && (
-            <div className="space-y-12 animate-in fade-in duration-500">
+        {/* Right-Side Navigation Dock (User requested on right side) */}
+        <RightSideNav activeSection={activeSection} onNavigate={scrollToSection} />
+
+        {/* Content Sections */}
+        <main className="relative z-10 space-y-16">
+          {/* SECTION 1: ABOUT */}
+          <section id="about" className="scroll-mt-24 space-y-12 animate-in fade-in duration-500 pb-12 border-b border-border/40">
+              <div className="flex items-center justify-between border-b border-border/40 pb-2">
+                <span className="text-xs font-mono font-semibold tracking-wider text-primary">01 // OVERVIEW & BIO</span>
+                <Badge variant="outline" className="text-[11px] font-mono text-muted-foreground">About Shubham</Badge>
+              </div>
+
               <div className="grid grid-cols-1 lg:grid-cols-3 gap-10">
                 <div className="lg:col-span-2 space-y-6">
                   <div>
@@ -632,12 +745,15 @@ export default function Portfolio() {
                   </Card>
                 ))}
               </div>
-            </div>
-          )}
+            </section>
 
-          {/* TAB 2: EXPERIENCE */}
-          {activeTab === "experience" && (
-            <div className="space-y-10 animate-in fade-in duration-500">
+          {/* SECTION 2: EXPERIENCE */}
+          <section id="experience" className="scroll-mt-24 space-y-10 animate-in fade-in duration-500 pb-12 border-b border-border/40">
+              <div className="flex items-center justify-between border-b border-border/40 pb-2">
+                <span className="text-xs font-mono font-semibold tracking-wider text-primary">02 // CAREER HISTORY</span>
+                <Badge variant="outline" className="text-[11px] font-mono text-muted-foreground">Production Roles</Badge>
+              </div>
+
               <div>
                 <h2 className="text-2xl font-bold mb-2 flex items-center gap-2">
                   <Briefcase className="h-6 w-6 text-primary" />
@@ -710,24 +826,46 @@ export default function Portfolio() {
                   </Card>
                 ))}
               </div>
-            </div>
-          )}
+            </section>
 
-          {/* TAB 3: PROJECTS */}
-          {activeTab === "projects" && (
-            <div className="space-y-10 animate-in fade-in duration-500">
-              <div>
-                <h2 className="text-2xl font-bold mb-2 flex items-center gap-2">
-                  <Code className="h-6 w-6 text-primary" />
-                  Featured Projects
-                </h2>
-                <p className="text-muted-foreground">
-                  Real-world enterprise systems, automation platforms, and data pipelines built and deployed.
-                </p>
+          {/* SECTION 3: PROJECTS */}
+          <section id="projects" className="scroll-mt-24 space-y-10 animate-in fade-in duration-500 pb-12 border-b border-border/40">
+              <div className="flex items-center justify-between border-b border-border/40 pb-2">
+                <span className="text-xs font-mono font-semibold tracking-wider text-primary">03 // FEATURED WORK</span>
+                <Badge variant="outline" className="text-[11px] font-mono text-muted-foreground">Engineering Portfolio</Badge>
+              </div>
+
+              <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4">
+                <div>
+                  <h2 className="text-2xl font-bold mb-2 flex items-center gap-2">
+                    <Code className="h-6 w-6 text-primary" />
+                    Featured Projects
+                  </h2>
+                  <p className="text-muted-foreground">
+                    Real-world enterprise systems, automation platforms, and data pipelines built and deployed.
+                  </p>
+                </div>
+
+                {/* Filter Pills */}
+                <div className="flex flex-wrap items-center gap-1.5">
+                  {projectFilters.map((f) => (
+                    <button
+                      key={f.id}
+                      onClick={() => setProjectCategory(f.id)}
+                      className={`px-3 py-1 text-xs rounded-full border transition-all duration-200 cursor-pointer ${
+                        projectCategory === f.id
+                          ? "bg-primary text-primary-foreground border-primary font-medium shadow-xs"
+                          : "bg-muted/40 hover:bg-muted text-muted-foreground hover:text-foreground border-border/60"
+                      }`}
+                    >
+                      {f.label} ({f.count})
+                    </button>
+                  ))}
+                </div>
               </div>
 
               <div className="grid grid-cols-1 gap-8">
-                {projects.map((project, index) => (
+                {filteredProjects.map((project, index) => (
                   <Card
                     key={index}
                     className="border-border/60 bg-card/60 backdrop-blur-sm overflow-hidden hover:border-primary/40 transition-all duration-300 shadow-md group"
@@ -776,35 +914,43 @@ export default function Portfolio() {
                         </div>
 
                         {/* Action buttons */}
-                        <div className="flex flex-wrap gap-3 pt-3">
-                          <Button
-                            variant="outline"
-                            size="sm"
-                            asChild
-                            className="text-xs bg-background/50 hover:scale-105 transition-transform duration-200"
-                          >
-                            <a href={project.github} target="_blank" rel="noopener noreferrer">
-                              <Github className="h-3.5 w-3.5 mr-1.5" />
-                              View Code
-                            </a>
-                          </Button>
+                        <div className="flex flex-wrap items-center gap-3 pt-3">
                           <Button
                             variant="default"
                             size="sm"
-                            asChild
-                            className="text-xs hover:scale-105 transition-transform duration-200"
+                            onClick={() => setSelectedProject(project)}
+                            className="text-xs hover:scale-105 transition-transform duration-200 cursor-pointer shadow-sm"
                           >
-                            <a href={project.live} target="_blank" rel="noopener noreferrer">
-                              <ExternalLink className="h-3.5 w-3.5 mr-1.5" />
-                              Platform Details
-                            </a>
+                            <ExternalLink className="h-3.5 w-3.5 mr-1.5" />
+                            View Details
                           </Button>
+                          {project.github && project.isPublicGithub !== false ? (
+                            <Button
+                              variant="outline"
+                              size="sm"
+                              asChild
+                              className="text-xs bg-background/50 hover:scale-105 transition-transform duration-200"
+                            >
+                              <a href={project.github} target="_blank" rel="noopener noreferrer">
+                                <Github className="h-3.5 w-3.5 mr-1.5" />
+                                GitHub
+                              </a>
+                            </Button>
+                          ) : (
+                            <span className="text-xs text-muted-foreground flex items-center gap-1.5 px-2.5 py-1 rounded-md bg-muted/40 border border-border/50">
+                              <ShieldCheck className="h-3.5 w-3.5 text-muted-foreground" />
+                              Enterprise / Client Project
+                            </span>
+                          )}
                         </div>
                       </div>
 
                       {/* Right: Project Image */}
                       <div className="lg:col-span-4 flex items-center justify-center">
-                        <div className="w-full aspect-video lg:aspect-square rounded-xl overflow-hidden bg-muted border border-border/50 shadow-inner group-hover:shadow-md transition-shadow">
+                        <div
+                          onClick={() => setSelectedProject(project)}
+                          className="w-full aspect-video lg:aspect-square rounded-xl overflow-hidden bg-muted border border-border/50 shadow-inner group-hover:shadow-md transition-shadow cursor-pointer"
+                        >
                           <img
                             src={project.image}
                             alt={project.title}
@@ -816,12 +962,128 @@ export default function Portfolio() {
                   </Card>
                 ))}
               </div>
-            </div>
-          )}
 
-          {/* TAB 4: SKILLS */}
-          {activeTab === "skills" && (
-            <div className="space-y-10 animate-in fade-in duration-500">
+              {/* Project Details Modal */}
+              <Dialog open={!!selectedProject} onOpenChange={(open) => !open && setSelectedProject(null)}>
+                <DialogContent className="max-w-2xl max-h-[88vh] overflow-y-auto bg-card/95 backdrop-blur-xl border border-border/80 shadow-2xl p-6 sm:p-8">
+                  {selectedProject && (
+                    <div className="space-y-6">
+                      <DialogHeader className="space-y-2">
+                        <div className="flex flex-wrap items-center gap-2">
+                          <Badge variant="outline" className="text-xs text-primary border-primary/30">
+                            {selectedProject.category}
+                          </Badge>
+                          {selectedProject.isPublicGithub === false ? (
+                            <Badge variant="secondary" className="text-xs flex items-center gap-1">
+                              <ShieldCheck className="h-3 w-3 text-muted-foreground" />
+                              Client / Enterprise Confidential
+                            </Badge>
+                          ) : (
+                            <Badge variant="secondary" className="text-xs flex items-center gap-1">
+                              <Github className="h-3 w-3" />
+                              Open Source Repository
+                            </Badge>
+                          )}
+                        </div>
+                        <DialogTitle className="text-2xl font-bold tracking-tight text-foreground">
+                          {selectedProject.title}
+                        </DialogTitle>
+                        <DialogDescription className="text-sm text-muted-foreground leading-relaxed">
+                          {selectedProject.overview || selectedProject.description}
+                        </DialogDescription>
+                      </DialogHeader>
+
+                      {/* Project Image */}
+                      {selectedProject.image && (
+                        <div className="w-full aspect-video rounded-xl overflow-hidden bg-muted border border-border/50 shadow-md">
+                          <img
+                            src={selectedProject.image}
+                            alt={selectedProject.title}
+                            className="w-full h-full object-cover"
+                          />
+                        </div>
+                      )}
+
+                      {/* Implementation Highlights */}
+                      <div className="space-y-3">
+                        <h4 className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
+                          Key Architecture & Modules:
+                        </h4>
+                        <ul className="space-y-2 text-xs sm:text-sm text-foreground/90">
+                          {selectedProject.highlights.map((h: string, i: number) => (
+                            <li key={i} className="flex items-start gap-2.5">
+                              <CheckCircle2 className="h-4 w-4 text-primary shrink-0 mt-0.5" />
+                              <span>{h}</span>
+                            </li>
+                          ))}
+                        </ul>
+                      </div>
+
+                      {/* Tech Stack */}
+                      <div className="space-y-2">
+                        <h4 className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
+                          Technologies Used:
+                        </h4>
+                        <div className="flex flex-wrap gap-1.5">
+                          {selectedProject.tech.map((t: string) => (
+                            <Badge key={t} variant="secondary" className="text-xs font-mono">
+                              {t}
+                            </Badge>
+                          ))}
+                        </div>
+                      </div>
+
+                      {/* Actions */}
+                      <div className="flex flex-wrap items-center justify-between gap-3 pt-4 border-t border-border/60">
+                        <div className="flex flex-wrap items-center gap-2.5">
+                          {selectedProject.github && selectedProject.isPublicGithub !== false && (
+                            <Button variant="outline" size="sm" asChild className="text-xs">
+                              <a href={selectedProject.github} target="_blank" rel="noopener noreferrer">
+                                <Github className="h-3.5 w-3.5 mr-1.5" />
+                                GitHub
+                              </a>
+                            </Button>
+                          )}
+                          <Button
+                            variant="default"
+                            size="sm"
+                            asChild
+                            className="text-xs hover:scale-105 transition-transform"
+                          >
+                            <a
+                              href="#contact"
+                              onClick={() => {
+                                setSelectedProject(null);
+                                scrollToSection("contact");
+                              }}
+                            >
+                              <MessageCircle className="h-3.5 w-3.5 mr-1.5" />
+                              Discuss This Project
+                            </a>
+                          </Button>
+                        </div>
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          onClick={() => setSelectedProject(null)}
+                          className="text-xs text-muted-foreground"
+                        >
+                          Close
+                        </Button>
+                      </div>
+                    </div>
+                  )}
+                </DialogContent>
+              </Dialog>
+            </section>
+
+          {/* SECTION 4: SKILLS */}
+          <section id="skills" className="scroll-mt-24 space-y-10 animate-in fade-in duration-500 pb-12 border-b border-border/40">
+              <div className="flex items-center justify-between border-b border-border/40 pb-2">
+                <span className="text-xs font-mono font-semibold tracking-wider text-primary">04 // CORE COMPETENCIES</span>
+                <Badge variant="outline" className="text-[11px] font-mono text-muted-foreground">Tech Stack</Badge>
+              </div>
+
               <div>
                 <h2 className="text-2xl font-bold mb-2 flex items-center gap-2">
                   <Cpu className="h-6 w-6 text-primary" />
@@ -865,12 +1127,15 @@ export default function Portfolio() {
                   );
                 })}
               </div>
-            </div>
-          )}
+            </section>
 
-          {/* TAB 5: EDUCATION */}
-          {activeTab === "education" && (
-            <div className="space-y-10 animate-in fade-in duration-500">
+          {/* SECTION 5: EDUCATION */}
+          <section id="education" className="scroll-mt-24 space-y-10 animate-in fade-in duration-500 pb-12 border-b border-border/40">
+              <div className="flex items-center justify-between border-b border-border/40 pb-2">
+                <span className="text-xs font-mono font-semibold tracking-wider text-primary">05 // ACADEMICS</span>
+                <Badge variant="outline" className="text-[11px] font-mono text-muted-foreground">Degrees & Credentials</Badge>
+              </div>
+
               <div>
                 <h2 className="text-2xl font-bold mb-2 flex items-center gap-2">
                   <GraduationCap className="h-6 w-6 text-primary" />
@@ -905,12 +1170,15 @@ export default function Portfolio() {
                   </Card>
                 ))}
               </div>
-            </div>
-          )}
+            </section>
 
-          {/* TAB 6: CONTACT */}
-          {activeTab === "contact" && (
-            <div className="space-y-10 animate-in fade-in duration-500">
+          {/* SECTION 6: CONTACT */}
+          <section id="contact" className="scroll-mt-24 space-y-10 animate-in fade-in duration-500 pt-2">
+              <div className="flex items-center justify-between border-b border-border/40 pb-2">
+                <span className="text-xs font-mono font-semibold tracking-wider text-primary">06 // CONNECT</span>
+                <Badge variant="outline" className="text-[11px] font-mono text-muted-foreground">Direct Inquiries</Badge>
+              </div>
+
               <div>
                 <h2 className="text-2xl font-bold mb-2 flex items-center gap-2">
                   <MessageCircle className="h-6 w-6 text-primary" />
@@ -1027,8 +1295,7 @@ export default function Portfolio() {
                   <ContactForm />
                 </div>
               </div>
-            </div>
-          )}
+            </section>
         </main>
 
         {/* Footer */}
@@ -1102,6 +1369,20 @@ export default function Portfolio() {
             </div>
           </div>
         </footer>
+
+        {/* Floating Back to Top Button */}
+        {showBackToTop && (
+          <Button
+            variant="outline"
+            size="icon"
+            onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
+            className="fixed bottom-6 left-6 z-40 h-11 w-11 rounded-full bg-card/90 dark:bg-card/80 backdrop-blur-md border border-border/80 shadow-xl hover:border-primary/50 hover:scale-110 transition-all duration-300 animate-in fade-in zoom-in-90 cursor-pointer"
+            title="Back to Top"
+            aria-label="Back to Top"
+          >
+            <ArrowUp className="h-5 w-5 text-primary" />
+          </Button>
+        )}
       </div>
     </div>
   );

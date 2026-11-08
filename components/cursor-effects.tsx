@@ -2,6 +2,7 @@
 
 import { useEffect, useRef } from "react"
 import { useTheme } from "next-themes"
+import { useEffects } from "@/context/effects-context"
 
 interface Particle {
   id: number
@@ -14,11 +15,21 @@ interface Particle {
   color: string
 }
 
-export function CursorEffects() {
+export interface CursorEffectsProps {
+  /** Explicitly override enabled state. If omitted, uses global effects configuration */
+  enabled?: boolean
+}
+
+export function CursorEffects({ enabled }: CursorEffectsProps = {}) {
+  const { cursorEffectsEnabled } = useEffects()
+  const isEnabled = enabled !== undefined ? enabled : cursorEffectsEnabled
+
   const canvasRef = useRef<HTMLCanvasElement>(null)
   const { theme } = useTheme()
 
   useEffect(() => {
+    if (!isEnabled) return
+
     const canvas = canvasRef.current
     if (!canvas) return
 
@@ -60,6 +71,7 @@ export function CursorEffects() {
     }
 
     function animate() {
+      if (!ctx || !canvas) return
       ctx.clearRect(0, 0, canvas.width, canvas.height)
 
       particles = particles
@@ -107,7 +119,11 @@ export function CursorEffects() {
         cancelAnimationFrame(animationId)
       }
     }
-  }, [theme])
+  }, [theme, isEnabled])
+
+  if (!isEnabled) {
+    return null
+  }
 
   return <canvas ref={canvasRef} className="fixed inset-0 pointer-events-none z-10" />
 }

@@ -2,6 +2,7 @@
 
 import { useEffect, useRef } from "react"
 import { useTheme } from "next-themes"
+import { useEffects } from "@/context/effects-context"
 
 interface Bubble {
   x: number
@@ -13,10 +14,30 @@ interface Bubble {
   hue: number
   floatSpeed: number
   floatAngle: number
-  floatPhase: number // Added phase for more organic motion
+  floatPhase: number
 }
 
-export function FloatingBubbles() {
+export interface FloatingBubblesProps {
+  /** Explicitly override enabled state. If omitted, uses global effects configuration */
+  enabled?: boolean
+  /** Override maximum number of bubbles */
+  maxCount?: number
+  /** Speed multiplier */
+  speedMultiplier?: number
+  className?: string
+}
+
+export function FloatingBubbles({
+  enabled,
+  maxCount,
+  speedMultiplier,
+  className = "fixed inset-0 pointer-events-none z-0",
+}: FloatingBubblesProps = {}) {
+  const { bubblesEnabled, bubbleCount: contextBubbleCount, bubbleSpeed: contextBubbleSpeed } = useEffects()
+  const isEnabled = enabled !== undefined ? enabled : bubblesEnabled
+  const activeCount = maxCount !== undefined ? maxCount : (contextBubbleCount || 7)
+  const activeSpeed = speedMultiplier !== undefined ? speedMultiplier : (contextBubbleSpeed || 1)
+
   const canvasRef = useRef<HTMLCanvasElement>(null)
   const bubblesRef = useRef<Bubble[]>([])
   const mouseRef = useRef({ x: -1000, y: -1000 })
@@ -24,6 +45,13 @@ export function FloatingBubbles() {
   const { theme } = useTheme()
 
   useEffect(() => {
+    if (!isEnabled) {
+      if (animationRef.current) {
+        cancelAnimationFrame(animationRef.current)
+      }
+      return
+    }
+
     const canvas = canvasRef.current
     if (!canvas) return
 
@@ -46,7 +74,7 @@ export function FloatingBubbles() {
 
     const createBubbles = () => {
       const introHeight = getIntroSectionHeight()
-      const bubbleCount = Math.min(7, Math.floor(canvas.width / 180))
+      const bubbleCount = Math.min(activeCount, Math.max(2, Math.floor(canvas.width / 180)))
       bubblesRef.current = []
 
       for (let i = 0; i < bubbleCount; i++) {
@@ -55,12 +83,12 @@ export function FloatingBubbles() {
           y: Math.random() * Math.min(introHeight, canvas.height * 0.6),
           vx: 0,
           vy: 0,
-          size: 40 + Math.random() * 30, // Slightly larger for better visibility
-          opacity: 0.25 + Math.random() * 0.25, // Softer opacity range
-          hue: 200 + Math.random() * 80, // Blue to purple range
-          floatSpeed: 0.5 + Math.random() * 0.5, // Slower, more liquid-like
+          size: 40 + Math.random() * 30,
+          opacity: 0.25 + Math.random() * 0.25,
+          hue: 200 + Math.random() * 80,
+          floatSpeed: (0.5 + Math.random() * 0.5) * activeSpeed,
           floatAngle: Math.random() * Math.PI * 2,
-          floatPhase: Math.random() * Math.PI * 2, // Random phase offset
+          floatPhase: Math.random() * Math.PI * 2,
         })
       }
     }
@@ -76,10 +104,10 @@ export function FloatingBubbles() {
       const mouse = mouseRef.current
       const isDark = theme === "dark"
       const introHeight = getIntroSectionHeight()
-      const repelDistance = 180 // Increased for gentler, earlier repulsion
+      const repelDistance = 180
 
       bubbles.forEach((bubble) => {
-        bubble.floatAngle += 0.008 // Slower rotation
+        bubble.floatAngle += 0.008
         bubble.floatPhase += 0.005
         const floatX = Math.sin(bubble.floatAngle + bubble.floatPhase) * bubble.floatSpeed
         const floatY = Math.cos(bubble.floatAngle * 0.6 + bubble.floatPhase * 0.8) * bubble.floatSpeed * 0.7
@@ -89,7 +117,7 @@ export function FloatingBubbles() {
         const distance = Math.sqrt(dx * dx + dy * dy)
 
         if (distance < repelDistance && distance > 0) {
-          const force = Math.pow((repelDistance - distance) / repelDistance, 2) * 0.8 // Quadratic easing for smoothness
+          const force = Math.pow((repelDistance - distance) / repelDistance, 2) * 0.8
           const angle = Math.atan2(dy, dx)
           bubble.vx += Math.cos(angle) * force
           bubble.vy += Math.sin(angle) * force
@@ -97,14 +125,14 @@ export function FloatingBubbles() {
 
         bubble.x += bubble.vx + floatX
         bubble.y += bubble.vy + floatY
-        bubble.vx *= 0.92 // Slower damping for more fluid motion
+        bubble.vx *= 0.92
         bubble.vy *= 0.92
 
         // Boundary constraints
         const margin = bubble.size
         if (bubble.x < margin) {
           bubble.x = margin
-          bubble.vx *= -0.3 // Softer bounce
+          bubble.vx *= -0.3
         }
         if (bubble.x > canvas.width - margin) {
           bubble.x = canvas.width - margin
@@ -129,13 +157,11 @@ export function FloatingBubbles() {
         )
 
         if (isDark) {
-          // Glassy effect for dark mode
           gradient.addColorStop(0, `hsla(${bubble.hue}, 75%, 75%, ${bubble.opacity * 0.9})`)
           gradient.addColorStop(0.3, `hsla(${bubble.hue}, 70%, 60%, ${bubble.opacity * 0.6})`)
           gradient.addColorStop(0.7, `hsla(${bubble.hue}, 65%, 50%, ${bubble.opacity * 0.3})`)
           gradient.addColorStop(1, `hsla(${bubble.hue}, 60%, 40%, 0)`)
         } else {
-          // Glassy effect for light mode
           gradient.addColorStop(0, `hsla(${bubble.hue}, 65%, 60%, ${bubble.opacity * 0.8})`)
           gradient.addColorStop(0.3, `hsla(${bubble.hue}, 60%, 50%, ${bubble.opacity * 0.5})`)
           gradient.addColorStop(0.7, `hsla(${bubble.hue}, 55%, 40%, ${bubble.opacity * 0.25})`)
@@ -164,12 +190,10 @@ export function FloatingBubbles() {
       animationRef.current = requestAnimationFrame(animate)
     }
 
-    // Initialize
     resizeCanvas()
     createBubbles()
     animate()
 
-    // Event listeners
     const handleResize = () => {
       resizeCanvas()
       createBubbles()
@@ -185,12 +209,16 @@ export function FloatingBubbles() {
       window.removeEventListener("resize", handleResize)
       window.removeEventListener("mousemove", handleMouseMove)
     }
-  }, [theme])
+  }, [theme, isEnabled, activeCount, activeSpeed])
+
+  if (!isEnabled) {
+    return null
+  }
 
   return (
     <canvas
       ref={canvasRef}
-      className="fixed inset-0 pointer-events-none z-0"
+      className={className}
       style={{
         background: "transparent",
       }}

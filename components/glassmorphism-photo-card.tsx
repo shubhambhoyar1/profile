@@ -2,12 +2,15 @@
 
 import { useEffect, useRef } from "react";
 import { useTheme } from "next-themes";
+import { useEffects } from "@/context/effects-context";
 
 export function GlassmorphismPhotoCard() {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const { theme } = useTheme();
+  const { bubblesEnabled } = useEffects();
 
   useEffect(() => {
+    if (!bubblesEnabled) return;
     const canvas = canvasRef.current;
     if (!canvas) return;
 
@@ -80,7 +83,7 @@ export function GlassmorphismPhotoCard() {
     return () => {
       cancelAnimationFrame(animationFrameId);
     };
-  }, [theme]);
+  }, [theme, bubblesEnabled]);
 
   return (
     <div className="relative w-72 h-96 rounded-2xl overflow-hidden group shadow-2xl transition-all duration-300 hover:shadow-primary/20">
@@ -88,11 +91,13 @@ export function GlassmorphismPhotoCard() {
       <div className="absolute inset-0 bg-gradient-to-br from-white/10 to-white/5 dark:from-white/5 dark:to-white/2 backdrop-blur-xl border border-white/20 dark:border-white/10 rounded-2xl shadow-2xl"></div>
 
       {/* Animated bubbles canvas */}
-      <canvas
-        ref={canvasRef}
-        className="absolute inset-0 w-full h-full rounded-2xl"
-        style={{ mixBlendMode: theme === "dark" ? "screen" : "multiply" }}
-      />
+      {bubblesEnabled && (
+        <canvas
+          ref={canvasRef}
+          className="absolute inset-0 w-full h-full rounded-2xl"
+          style={{ mixBlendMode: theme === "dark" ? "screen" : "multiply" }}
+        />
+      )}
 
       {/* Photo */}
       <div className="absolute inset-4 rounded-xl overflow-hidden bg-gradient-to-br from-gray-100 to-gray-200 dark:from-gray-800 dark:to-gray-900 border border-white/10">

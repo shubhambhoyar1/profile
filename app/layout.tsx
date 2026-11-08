@@ -3,6 +3,7 @@ import type { Metadata } from "next";
 import { Inter, JetBrains_Mono } from "next/font/google";
 import { Analytics } from "@vercel/analytics/next";
 import { ThemeProvider } from "@/components/theme-provider";
+import { EffectsProvider } from "@/context/effects-context";
 import { Suspense } from "react";
 import "./globals.css";
 
@@ -30,6 +31,11 @@ export const metadata: Metadata = {
     "Microservices",
     "PostgreSQL",
     "MongoDB",
+    "Shopify API",
+    "Shiprocket API",
+    "Flutter",
+    "Inventory Management",
+    "Order Fulfillment",
     "RabbitMQ",
     "Redis",
   ],
@@ -66,7 +72,9 @@ export default function RootLayout({
       <body className={`font-sans ${inter.variable} ${jetbrainsMono.variable} antialiased`}>
         <Suspense fallback={null}>
           <ThemeProvider attribute="class" defaultTheme="dark" enableSystem disableTransitionOnChange>
-            {children}
+            <EffectsProvider>
+              {children}
+            </EffectsProvider>
           </ThemeProvider>
         </Suspense>
         <Analytics />

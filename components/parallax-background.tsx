@@ -2,13 +2,24 @@
 
 import { useEffect, useRef } from "react"
 import { useTheme } from "next-themes"
+import { useEffects } from "@/context/effects-context"
 
-export function ParallaxBackground() {
+export interface ParallaxBackgroundProps {
+  /** Explicitly override enabled state. If omitted, uses global effects configuration */
+  enabled?: boolean
+}
+
+export function ParallaxBackground({ enabled }: ParallaxBackgroundProps = {}) {
+  const { parallaxEnabled } = useEffects()
+  const isEnabled = enabled !== undefined ? enabled : parallaxEnabled
+
   const mousePosRef = useRef({ x: 0, y: 0 })
   const scrollYRef = useRef(0)
   const { theme } = useTheme()
 
   useEffect(() => {
+    if (!isEnabled) return
+
     const handleMouseMove = (e: MouseEvent) => {
       mousePosRef.current = {
         x: (e.clientX - window.innerWidth / 2) / window.innerWidth,
@@ -27,7 +38,11 @@ export function ParallaxBackground() {
       window.removeEventListener("mousemove", handleMouseMove)
       window.removeEventListener("scroll", handleScroll)
     }
-  }, [])
+  }, [isEnabled])
+
+  if (!isEnabled) {
+    return null
+  }
 
   const isDark = theme === "dark"
   const layer1Opacity = isDark ? 0.3 : 0.2
@@ -64,7 +79,7 @@ export function ParallaxBackground() {
         style={{
           opacity: layer2Opacity,
           transform: `translate(${mousePosRef.current.x * 20}px, ${mousePosRef.current.y * 20 + scrollYRef.current * 0.2}px)`,
-          background: `radial-gradient(circle at 60% 40%, ${layer2Colors.split(", ")[0]} 0%, transparent 50%), radial-gradient(circle at 40% 60%, ${layer2Colors.split(", ")[1]} 0%, transparent 50%)`,
+          background: `radial-gradient(circle at 40% 40%, ${layer2Colors.split(", ")[0]} 0%, transparent 50%), radial-gradient(circle at 60% 60%, ${layer2Colors.split(", ")[1]} 0%, transparent 50%)`,
         }}
       />
 
@@ -74,7 +89,7 @@ export function ParallaxBackground() {
         style={{
           opacity: layer3Opacity,
           transform: `translate(${mousePosRef.current.x * 30}px, ${mousePosRef.current.y * 30 + scrollYRef.current * 0.3}px)`,
-          background: `radial-gradient(circle at 90% 10%, ${layer3Colors.split(", ")[0]} 0%, transparent 50%), radial-gradient(circle at 10% 90%, ${layer3Colors.split(", ")[1]} 0%, transparent 50%)`,
+          background: `radial-gradient(circle at 70% 30%, ${layer3Colors.split(", ")[0]} 0%, transparent 50%), radial-gradient(circle at 30% 70%, ${layer3Colors.split(", ")[1]} 0%, transparent 50%)`,
         }}
       />
     </div>

@@ -2,6 +2,7 @@
 
 import { useEffect, useRef } from "react"
 import { useTheme } from "next-themes"
+import { useEffects } from "@/context/effects-context"
 
 interface FloatingElement {
   id: number
@@ -13,13 +14,28 @@ interface FloatingElement {
   rotation: number
 }
 
-export function FloatingElements() {
+export interface FloatingElementsProps {
+  /** Explicitly override enabled state. If omitted, uses global effects configuration */
+  enabled?: boolean
+}
+
+export function FloatingElements({ enabled }: FloatingElementsProps = {}) {
+  const { floatingElementsEnabled } = useEffects()
+  const isEnabled = enabled !== undefined ? enabled : floatingElementsEnabled
+
   const elementsRef = useRef<FloatingElement[]>([])
   const mousePosRef = useRef({ x: 0, y: 0 })
   const intervalRef = useRef<NodeJS.Timeout>()
   const { theme } = useTheme()
 
   useEffect(() => {
+    if (!isEnabled) {
+      if (intervalRef.current) {
+        clearInterval(intervalRef.current)
+      }
+      return
+    }
+
     const initialElements: FloatingElement[] = []
     for (let i = 0; i < 15; i++) {
       initialElements.push({
@@ -58,7 +74,6 @@ export function FloatingElements() {
     }
 
     intervalRef.current = setInterval(animate, 16) // ~60fps
-
     window.addEventListener("mousemove", handleMouseMove)
 
     return () => {
@@ -67,7 +82,11 @@ export function FloatingElements() {
         clearInterval(intervalRef.current)
       }
     }
-  }, [])
+  }, [isEnabled])
+
+  if (!isEnabled) {
+    return null
+  }
 
   return (
     <div className="fixed inset-0 pointer-events-none z-0 overflow-hidden">
