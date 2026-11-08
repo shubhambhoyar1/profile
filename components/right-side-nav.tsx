@@ -135,7 +135,7 @@ export function RightSideNav({
       </aside>
 
       {/* 2. Mobile & Tablet (< 1024px): Floating Right-Side Collapsible Pill */}
-      <div className="lg:hidden fixed right-3 bottom-6 z-40 flex flex-col items-end">
+      <div className="lg:hidden fixed right-3 sm:right-4 bottom-20 z-40 flex flex-col items-end">
         {mobileOpen && (
           <div className="mb-2 p-2 rounded-2xl bg-card/95 dark:bg-card/90 backdrop-blur-xl border border-border/80 shadow-2xl min-w-[170px] flex flex-col gap-1 animate-in fade-in slide-in-from-bottom-2 duration-200 select-none">
             <div className="flex items-center justify-between px-2.5 py-1 text-[10px] font-mono uppercase tracking-wider text-muted-foreground border-b border-border/60 mb-1">

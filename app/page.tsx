@@ -9,6 +9,7 @@ import { InteractiveName } from "@/components/interactive-name";
 import { FloatingBubbles } from "@/components/floating-bubbles";
 import { EffectsControls } from "@/components/effects-controls";
 import { RightSideNav } from "@/components/right-side-nav";
+import { AiAssistant } from "@/components/ai-assistant";
 import { InteractiveLinkedInCard } from "@/components/interactive-linkedin-card";
 import {
   Github,
@@ -1383,6 +1384,9 @@ export default function Portfolio() {
             <ArrowUp className="h-5 w-5 text-primary" />
           </Button>
         )}
+
+        {/* AI Portfolio Assistant (Free Google Gemini) */}
+        <AiAssistant />
       </div>
     </div>
   );

@@ -1,0 +1,39 @@
+{
+  "name": "Shubham Bhoyar",
+  "title": "Full Stack Developer (Node.js, React.js)",
+  "location": "Nagpur, Maharashtra, India",
+  "status": "Open to Opportunities",
+  "experienceYears": "Nearly 3 years",
+  "summary": "Full Stack Developer with nearly 3 years of hands-on experience building and deploying scalable web applications, RESTful microservices, and customer-engagement platforms using Node.js, React.js, PostgreSQL, and MongoDB. Specialized in WhatsApp Business API & Flows, in-chat payment gateways, e-commerce order fulfillment (Shopify & Shiprocket), and high-scale data migration pipelines. Experienced across the full feature lifecycle: API design, database schemas, authentication, third-party integrations, and production deployment.",
+  "contact": {
+    "email": "shubhambhoyar111222@gmail.com",
+    "phone": "+91 9284954891",
+    "whatsapp": "https://wa.me/919284954891",
+    "linkedin": "https://www.linkedin.com/in/shubham-bhoyar-522a0b218/",
+    "github": "https://github.com/shubhambhoyar1",
+    "portfolio": "https://shubhambhoyar.vercel.app",
+    "resume": "/Shubham_Bhoyar_Resume.pdf"
+  },
+  "currentRole": {
+    "title": "Software Developer",
+    "company": "Leadows Technologies Pvt Ltd",
+    "focus": "Omnichannel customer communication platforms (WhatsApp, SMS, RCS), low-code WhatsApp Flow automation platforms, in-chat payments, and high-volume data pipelines."
+  },
+  "stats": [
+    { "label": "Years Experience", "value": "~3" },
+    { "label": "Records Migrated Zero-Downtime", "value": "100k+" },
+    { "label": "B.Tech IT CGPA", "value": "8.00 / 10.0" },
+    { "label": "Payment & API Uptime", "value": "100%" }
+  ],
+  "agenticAiKnowledge": {
+    "overview": "Shubham has practical understanding and active exploration in modern AI architectures, focusing on Retrieval-Augmented Generation (RAG), LLM application integration, vector embeddings, and Agentic workflows.",
+    "competencies": [
+      "Retrieval-Augmented Generation (RAG) pipelines for grounding AI responses in custom knowledge bases",
+      "Vector search and similarity retrieval using Qdrant vector database",
+      "LLM API integration (Google Gemini API, OpenAI API) with structured output and system prompt constraints",
+      "Building practical AI assistants, chatbot analytics pipelines, and conversational user experience automation",
+      "Exploration of Agentic AI concepts including tool calling, structured retrieval, and multi-turn conversational agents"
+    ]
+  }
+}
+

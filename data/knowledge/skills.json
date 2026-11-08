@@ -1,0 +1,95 @@
+{
+  "summary": "Shubham Bhoyar specializes in full-stack web engineering, focusing heavily on Node.js backend architectures, RESTful APIs, microservices, databases (PostgreSQL, MongoDB), real-time messaging (WhatsApp Business API, RabbitMQ, Redis), and modern frontend development with React.js.",
+  "categories": [
+    {
+      "name": "Backend & APIs",
+      "skills": [
+        "Node.js",
+        "Express.js",
+        "REST APIs",
+        "Microservices Architecture",
+        "Shopify API",
+        "Shiprocket API",
+        "WhatsApp Business API",
+        "Webhooks (Intake & Verification)",
+        "API Architecture & Design"
+      ]
+    },
+    {
+      "name": "Frontend & Mobile",
+      "skills": [
+        "React.js",
+        "Flutter (Basic)",
+        "JavaScript (ES6+)",
+        "TypeScript",
+        "HTML5",
+        "CSS3",
+        "Tailwind CSS",
+        "Responsive UI / UX"
+      ]
+    },
+    {
+      "name": "E-Commerce & Logistics",
+      "skills": [
+        "Shopify Webhook Sync",
+        "Shiprocket Logistics API",
+        "Warehouse & Bin / Rack Management",
+        "Employee Order Task Assignment",
+        "Automated PDF Invoice Generation",
+        "Air Waybill (AWB) & Shipping Tracking"
+      ]
+    },
+    {
+      "name": "Databases & Optimization",
+      "skills": [
+        "MongoDB",
+        "PostgreSQL",
+        "MySQL",
+        "Query Optimization",
+        "Database Indexing & Schema Design",
+        "High-Throughput Data Pipelines"
+      ]
+    },
+    {
+      "name": "Messaging & Caching",
+      "skills": [
+        "RabbitMQ (Message Queuing)",
+        "Redis (Distributed Caching & Session Stores)",
+        "Pub/Sub Architectures",
+        "Asynchronous Task Decoupling"
+      ]
+    },
+    {
+      "name": "Cloud, DevOps & Observability",
+      "skills": [
+        "AWS (S3 Cloud Storage)",
+        "Docker (Basic Containerization)",
+        "CI/CD Principles",
+        "Grafana (Dashboards & Metrics)",
+        "Loki (Centralized Log Aggregation)",
+        "System Health Monitoring"
+      ]
+    },
+    {
+      "name": "AI, RAG & Vector Search",
+      "skills": [
+        "RAG (Retrieval-Augmented Generation)",
+        "LLM API Integration (Google Gemini API, OpenAI)",
+        "Vector Embeddings",
+        "Vector Database Search (Qdrant)",
+        "Agentic AI concepts and grounded prompt engineering"
+      ]
+    },
+    {
+      "name": "Developer Tools & Workflow",
+      "skills": [
+        "Git & GitHub",
+        "Postman",
+        "Linux CLI & Bash",
+        "VS Code",
+        "Vercel Deployment"
+      ]
+    }
+  ]
+}
+

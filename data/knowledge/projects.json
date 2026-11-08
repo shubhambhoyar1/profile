@@ -1,0 +1,168 @@
+[
+  {
+    "id": "inventory-management",
+    "title": "Inventory & Order Management System",
+    "category": "E-Commerce Logistics & Fulfillment",
+    "tagline": "Customized e-commerce inventory and order fulfillment platform integrated with Shopify and Shiprocket.",
+    "overview": "A customized inventory management platform that connects Shopify and Shiprocket to automate order processing, warehouse management, employee assignments, invoice generation, and shipping operations.",
+    "role": "Full Stack Developer (Architecture, Webhooks, API Integrations, Database Schema)",
+    "technologies": [
+      "React.js",
+      "Node.js",
+      "MongoDB",
+      "Shopify API",
+      "Shiprocket API",
+      "Flutter (Basic)",
+      "Webhooks",
+      "REST APIs"
+    ],
+    "highlights": [
+      "Shopify Webhook Integration: Automated real-time order intake, inventory syncing, and order status updates without polling delays",
+      "Warehouse and Rack Management: Bin-level mapping, stock movement tracking, and physical inventory allocation across warehouse locations",
+      "Employee-wise Order Assignment: Automated and manual task delegation for warehouse staff with role-based status workflows",
+      "Mobile Order Processing: Streamlined picking, packing, and validation interface optimized for mobile and handheld warehouse scanners",
+      "Automated Invoice Generation: Programmatic generation of compliant PDF invoices, packing slips, and order receipts",
+      "Shipping Management: Direct Shiprocket API integration for real-time courier rate comparison, AWB label generation, and live dispatch tracking"
+    ],
+    "links": {
+      "github": null,
+      "isPublicGithub": false,
+      "live": "https://shubhambhoyar.vercel.app"
+    }
+  },
+  {
+    "id": "whatsapp-flow-platform",
+    "title": "WhatsApp Flow Automation Platform",
+    "category": "Full Stack & Enterprise Messaging",
+    "tagline": "Low-code platform empowering businesses to create, manage, and deploy interactive WhatsApp Flows.",
+    "overview": "A visual drag-and-drop platform empowering businesses to build interactive multi-screen WhatsApp Flows for WhatsApp Business Accounts with real-time phone preview and automatic schema validation.",
+    "role": "Lead Full Stack Developer",
+    "technologies": [
+      "Node.js",
+      "React.js",
+      "WhatsApp Business API",
+      "Flow JSON",
+      "Adapters",
+      "TypeScript",
+      "Tailwind CSS"
+    ],
+    "highlights": [
+      "Drag-and-drop flow building canvas with reusable UI components (Heading, Text Body, Conditions, Rich Text, Input Fields)",
+      "Automated Flow JSON generation via custom adapters with a single-click build action",
+      "Interactive real-time mobile simulator previewing flows on an emulated smartphone screen before deployment",
+      "Strict client-side validation preventing WhatsApp Business API configuration errors prior to deployment"
+    ],
+    "links": {
+      "github": "https://github.com/shubhambhoyar1",
+      "isPublicGithub": true,
+      "live": "https://shubhambhoyar.vercel.app"
+    }
+  },
+  {
+    "id": "chatbot-analytics",
+    "title": "Chatbot Analytics Dashboard",
+    "category": "Data Analytics & Funnel Tracking",
+    "tagline": "High-visibility conversational analytics dashboard monitoring user journeys and conversion funnels.",
+    "overview": "Built to monitor user journeys across chatbot touchpoints. Captures milestone events throughout conversations, tracks drop-off stages, and delivers real-time statistical insights so businesses can maximize conversion rates.",
+    "role": "Full Stack Developer",
+    "technologies": [
+      "Node.js",
+      "React.js",
+      "MongoDB",
+      "REST APIs",
+      "Data Analytics",
+      "Chart.js"
+    ],
+    "highlights": [
+      "Tracked granular user journeys with milestone checkpoints across conversational sequences",
+      "Real-time funnel metrics identifying high-friction drop-offs and overall completion velocity",
+      "High-throughput event ingestion backed by efficient MongoDB aggregation pipelines",
+      "Actionable business intelligence metrics empowering customer support and sales teams"
+    ],
+    "links": {
+      "github": "https://github.com/shubhambhoyar1",
+      "isPublicGithub": true,
+      "live": "https://shubhambhoyar.vercel.app"
+    }
+  },
+  {
+    "id": "aws-data-migration",
+    "title": "High-Scale Data Migration Pipeline (AWS to Data Center)",
+    "category": "Backend Infrastructure & Migration Scripts",
+    "tagline": "Zero-downtime, fault-tolerant batch migration pipeline moving 100,000+ sensitive documents.",
+    "overview": "Resilient batch migration pipeline engineered to safely transition 50,000 to 100,000+ sensitive documents from AWS cloud storage to on-premise data centers during infrastructure modernization with zero data loss and zero downtime.",
+    "role": "Backend Engineer (Scripting, Validation, Audit Logging)",
+    "technologies": [
+      "Node.js",
+      "MongoDB",
+      "AWS S3",
+      "Data Center Migration",
+      "Batch Processing",
+      "Audit Logging"
+    ],
+    "highlights": [
+      "Automated URL substitution and validation replacing AWS S3 URLs with data-center endpoints",
+      "Pre- and post-migration verification counting affected documents to ensure 100% data integrity",
+      "Stateful tracking of completed vs. pending documents with pause, audit, and resume capabilities",
+      "Chunk-based asynchronous batch processing eliminating database locks and downtime"
+    ],
+    "links": {
+      "github": "https://github.com/shubhambhoyar1",
+      "isPublicGithub": true,
+      "live": "https://github.com/shubhambhoyar1"
+    }
+  },
+  {
+    "id": "whatsapp-inchat-payment",
+    "title": "WhatsApp In-Chat Payment Gateway Integration",
+    "category": "Fintech & Conversational Commerce",
+    "tagline": "Frictionless in-chat transaction integration utilizing WhatsApp Business API and payment providers.",
+    "overview": "Engineered secure end-to-end payment workflow directly inside WhatsApp chats, enabling users to browse, select products, and complete payments without redirecting to external websites.",
+    "role": "Backend Engineer",
+    "technologies": [
+      "Node.js",
+      "Express.js",
+      "WhatsApp Business API",
+      "Payment Gateway Webhooks",
+      "PostgreSQL",
+      "HMAC Verification"
+    ],
+    "highlights": [
+      "Implemented secure webhook handlers with cryptographic signature verification",
+      "Automated transaction receipts and instant order confirmation via WhatsApp messages",
+      "Maintained 100% payment API uptime and idempotent transaction handling"
+    ],
+    "links": {
+      "github": "https://github.com/shubhambhoyar1",
+      "isPublicGithub": true,
+      "live": "https://shubhambhoyar.vercel.app"
+    }
+  },
+  {
+    "id": "rag-ai-exploration",
+    "title": "AI Knowledge Base & RAG Vector Search (Exploration)",
+    "category": "Artificial Intelligence & RAG",
+    "tagline": "Retrieval-Augmented Generation prototype using vector databases and LLM embeddings.",
+    "overview": "Exploration of grounding LLMs using vector similarity search. Ingests domain documents, generates dense embeddings, and stores them in Qdrant for semantic search and context injection into LLM prompts.",
+    "role": "Developer / Researcher",
+    "technologies": [
+      "Python",
+      "Node.js",
+      "Qdrant",
+      "Google Gemini API / OpenAI",
+      "Vector Embeddings",
+      "RAG Architecture"
+    ],
+    "highlights": [
+      "Document chunking and dense vector embedding generation",
+      "Semantic similarity search using Qdrant vector database",
+      "Prompt construction with strict context boundaries to eliminate hallucinations"
+    ],
+    "links": {
+      "github": "https://github.com/shubhambhoyar1",
+      "isPublicGithub": true,
+      "live": "https://shubhambhoyar.vercel.app"
+    }
+  }
+]
+

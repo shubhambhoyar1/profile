@@ -1,0 +1,27 @@
+[
+  {
+    "degree": "B.Tech in Information Technology",
+    "institution": "G.H. Raisoni College of Engineering, Nagpur",
+    "period": "2019 — 2023",
+    "grade": "CGPA: 8.00 / 10.0",
+    "location": "Nagpur, Maharashtra, India",
+    "description": "Completed 4-year undergraduate engineering degree covering Data Structures and Algorithms, Database Management Systems, Computer Networks, Software Engineering, Web Technologies, and Distributed Systems."
+  },
+  {
+    "degree": "Higher Secondary Certificate (HSC) - Science",
+    "institution": "Z.P. Gandhi Junior College of Science",
+    "period": "2017 — 2019",
+    "grade": "Score: 61.69%",
+    "location": "Maharashtra, India",
+    "description": "Focused science curriculum in Physics, Chemistry, and Higher Mathematics."
+  },
+  {
+    "degree": "Secondary School Certificate (SSC)",
+    "institution": "Samarth Vidhyalaya, Lakhani",
+    "period": "Completed 2017",
+    "grade": "Score: 64.20%",
+    "location": "Maharashtra, India",
+    "description": "Foundational secondary education with distinction in Science and Mathematics."
+  }
+]
+

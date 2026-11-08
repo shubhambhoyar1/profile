@@ -1,0 +1,58 @@
+[
+  {
+    "company": "Leadows Technologies Pvt Ltd",
+    "role": "Software Developer",
+    "period": "Nov 2023 — Present",
+    "location": "Nagpur, Maharashtra, India",
+    "type": "Full-Time",
+    "description": "Engineering scalable enterprise web applications, microservices, and multi-channel customer-engagement platforms supporting WhatsApp, SMS, and RCS.",
+    "keyResponsibilities": [
+      "Building full-stack enterprise applications using Node.js, React.js, PostgreSQL, and MongoDB.",
+      "Designing resilient microservices architecture utilizing REST APIs, RabbitMQ message queues, and Redis distributed caching.",
+      "Developing omnichannel customer communication platforms supporting WhatsApp, SMS, and RCS messaging.",
+      "Integrating secure payment gateways with WhatsApp Business API to facilitate seamless in-chat transactions.",
+      "Optimizing database query performance, indexing strategies, and data retrieval pipelines for high-throughput with low latency.",
+      "Implementing centralized system observability and logging using Grafana and Loki.",
+      "Developing a customized e-commerce inventory and order fulfillment platform integrated with Shopify webhooks and Shiprocket logistics APIs.",
+      "Authoring zero-downtime batch migration scripts moving 100,000+ sensitive records from AWS cloud storage to on-premise data centers."
+    ],
+    "technologies": [
+      "Node.js",
+      "React.js",
+      "PostgreSQL",
+      "MongoDB",
+      "RabbitMQ",
+      "Redis",
+      "Shopify API",
+      "Shiprocket API",
+      "WhatsApp Business API",
+      "Flutter (Basic)",
+      "Loki",
+      "Grafana",
+      "Microservices",
+      "REST APIs"
+    ]
+  },
+  {
+    "company": "Qloron Pvt Ltd",
+    "role": "Software Engineer Intern",
+    "period": "Dec 2022 — May 2023",
+    "location": "Nagpur, Maharashtra, India",
+    "type": "Internship",
+    "description": "Developed responsive frontend interfaces, integrated REST APIs, and gained practical full-stack software development experience.",
+    "keyResponsibilities": [
+      "Built clean, responsive, and reusable frontend components using JavaScript (ES6+), HTML5, CSS3, and React.js.",
+      "Assisted with RESTful API integration and learned production-grade full-stack engineering standards.",
+      "Collaborated with cross-functional teams in an Agile development environment adhering to clean code practices and Git version control."
+    ],
+    "technologies": [
+      "React.js",
+      "JavaScript (ES6+)",
+      "HTML5",
+      "CSS3",
+      "REST APIs",
+      "Git"
+    ]
+  }
+]
+
